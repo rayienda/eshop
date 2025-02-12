@@ -121,4 +121,5 @@ class ProductRepositoryTest {
         productRepository.delete("a0f9646e-9022-437d-a0bf-d0821dde9098");
         assertNull(productRepository.findById("a0f9646e-9022-437d-a0bf-d0821dde9098"));
     }
+
 }
