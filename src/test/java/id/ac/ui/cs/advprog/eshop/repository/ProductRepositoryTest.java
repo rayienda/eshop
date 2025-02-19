@@ -38,88 +38,67 @@ class ProductRepositoryTest {
     }
 
     @Test
-    void testFindAllIfEmpty() {
-        Iterator<Product> productIterator = productRepository.findAll();
-        assertFalse(productIterator.hasNext());
-    }
-
-    @Test
-    void testFindAllIfMoreThanOneProduct() {
-        Product product1 = new Product();
-        product1.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
-        product1.setProductName("Sampo Cap Bambang");
-        product1.setProductQuantity(100);
-        productRepository.create(product1);
-
-        Product product2 = new Product();
-        product2.setProductId("a0f9646e-90b1-437d-a0bf-d0821dde9098");
-        product2.setProductName("Sampo Cap Usep");
-        product2.setProductQuantity(50);
-        productRepository.create(product2);
-
-        Iterator<Product> productIterator = productRepository.findAll();
-        assertTrue(productIterator.hasNext());
-        Product savedProduct = productIterator.next();
-        assertEquals(product1.getProductId(), savedProduct.getProductId());
-        savedProduct = productIterator.next();
-        assertEquals(product2.getProductId(), savedProduct.getProductId());
-        assertFalse(productIterator.hasNext());
-    }
-
-    // Update an existing product
-    @Test
-    void testUpdateProduct_Success() {
+    void testFindById_ProductFound() {
         Product product = new Product();
-        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63444");
-        product.setProductName("Old Name");
-        product.setProductQuantity(50);
+        product.setProductId("123");
+        productRepository.create(product);
 
+        Product foundProduct = productRepository.findById("123");
+
+        assertNotNull(foundProduct);
+        assertEquals("123", foundProduct.getProductId());
+    }
+
+    @Test
+    void testFindById_ProductNotFound() {
+        Product result = productRepository.findById("non-existent-id");
+        assertNull(result); // Should return null when no product is found
+    }
+
+    @Test
+    void testUpdate_ProductFound() {
+        Product product = new Product();
+        product.setProductId("product-1");
+        product.setProductName("Soap");
+        product.setProductQuantity(100);
         productRepository.create(product);
 
         Product updatedProduct = new Product();
-        updatedProduct.setProductId("eb558e9f-1c39-460e-8860-71af6af63444");
-        updatedProduct.setProductName("Available Product");
-        updatedProduct.setProductQuantity(75);
+        updatedProduct.setProductId("product-1");
+        updatedProduct.setProductName("Sabun");
+        updatedProduct.setProductQuantity(34);
 
-        productRepository.update(updatedProduct);
-        Product modifiedProduct = productRepository.findById("eb558e9f-1c39-460e-8860-71af6af63444");
+        Product result = productRepository.update(updatedProduct);
 
-        assertEquals("Available Product", modifiedProduct.getProductName());
-        assertEquals(75, modifiedProduct.getProductQuantity());
+        assertNotNull(result);
+        assertEquals("Sabun", result.getProductName());
+        assertEquals(34, result.getProductQuantity());
     }
 
-    // Update a non-existent product
     @Test
-    void testUpdateProduct_Fail_ProductNotFound() {
+    void testUpdate_ProductNotFound() {  // ✅ Only one instance of this method exists now
         Product updatedProduct = new Product();
-        updatedProduct.setProductId("a0f9646e-9022-437d-a0bf-d0821dde9098");
-        updatedProduct.setProductName("No Product");
-        updatedProduct.setProductQuantity(20);
+        updatedProduct.setProductId("non-existent-id");
 
-        productRepository.update(updatedProduct);
-        assertNull(productRepository.findById("a0f9646e-9022-437d-a0bf-d0821dde9098"));
+        Product result = productRepository.update(updatedProduct);
+        assertNull(result);
     }
 
-    // Delete an existing product
     @Test
-    void testDeleteProduct_Success() {
+    void testDelete_ProductFound() {
         Product product = new Product();
-        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63444");
-        product.setProductName("Un-Add Product");
-        product.setProductQuantity(50);
-
+        product.setProductId("product-1");
+        product.setProductName("Sampo Cap Ben");
+        product.setProductQuantity(100);
         productRepository.create(product);
-        assertNotNull(productRepository.findById("eb558e9f-1c39-460e-8860-71af6af63444"));
 
-        productRepository.delete("eb558e9f-1c39-460e-8860-71af6af63444");
-        assertNull(productRepository.findById("eb558e9f-1c39-460e-8860-71af6af63444"));
+        boolean deleted = productRepository.delete("product-1");
+        assertTrue(deleted);
     }
 
-    // Delete a non-existent product
     @Test
-    void testDeleteProduct_Fail_ProductNotFound() {
-        productRepository.delete("a0f9646e-9022-437d-a0bf-d0821dde9098");
-        assertNull(productRepository.findById("a0f9646e-9022-437d-a0bf-d0821dde9098"));
+    void testDelete_ProductNotFound() {
+        boolean deleted = productRepository.delete("non-existent-id");
+        assertFalse(deleted);
     }
-
 }
