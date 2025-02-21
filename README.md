@@ -56,13 +56,13 @@ By refactoring the functional test suites to follow these principles, the test c
 ## Reflection 2
 1. **List the code quality issue(s) that you fixed during the exercise and explain your strategy on fixing them.**
 
-    Issue: The import "import java.util.UUID;" was present in ProductControllerTest.java but was not being used.
+    Issue: The import "import java.util.UUID;" an "import org.springframework.ui.Model;" was present in ProductControllerTest.java but was not being used.
     Strategy: Deleted the unused import to maintain clean, readable, and efficient code.
 
 
 2. **Look at your CI/CD workflows (GitHub)/pipelines (GitLab). Do you think the current implementation has met the definition of Continuous Integration and Continuous Deployment?**
    
-    The CI workflows automate the project's build process, execute unit tests, and conduct code quality and security analysis whenever code is pushed or a pull request is created.
+   The CI workflows automate the project's build process, execute unit tests, and conduct code quality and security analysis whenever code is pushed or a pull request is created.
    The deployment workflow automatically builds a Docker image and deploys it to Koyeb upon pushes to the main branch.
    Additionally, scheduled checks and branch protection mechanisms enhance the reliability and security of the integration and deployment processes. While the implementation meets CI/CD standards, further improvements, such as integration testing and multi-environment deployments, could strengthen the pipeline even more.
 </details>
