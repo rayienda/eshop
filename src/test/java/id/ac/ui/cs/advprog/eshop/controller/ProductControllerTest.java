@@ -7,8 +7,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +37,9 @@ class ProductControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(productController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(productController)
+                .setControllerAdvice(new GlobalExceptionHandler()) // Exception handling for test environment
+                .build();
     }
 
     @Test
@@ -96,6 +102,23 @@ class ProductControllerTest {
     }
 
     @Test
+    void testEditProductPageWithDifferentId() throws Exception {
+        Product product1 = new Product();
+        product1.setProductId("111");
+        Product product2 = new Product();
+        product2.setProductId("222");
+        List<Product> productList = new ArrayList<>();
+        productList.add(product1);
+        productList.add(product2);
+
+        when(mockProductService.findAll()).thenReturn(productList);
+
+        mockMvc.perform(get("/product/edit/333"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/product/list"));
+    }
+
+    @Test
     void testEditProductPost() throws Exception {
         Product updatedProduct = new Product();
         updatedProduct.setProductId("123");
@@ -109,10 +132,33 @@ class ProductControllerTest {
     }
 
     @Test
+    void testEditProductPostFails() throws Exception {
+        doThrow(new RuntimeException("Update failed")).when(mockProductService).update(any(Product.class));
+
+        mockMvc.perform(post("/product/edit")
+                        .flashAttr("product", new Product()))
+                .andExpect(status().isInternalServerError()) // Expect HTTP 500
+                .andExpect(content().string("Update failed")); // Ensure exception message is returned
+
+        verify(mockProductService, times(1)).update(any(Product.class));
+    }
+
+    @Test
     void testDeleteProduct() throws Exception {
         mockMvc.perform(get("/product/delete/123"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/product/list"));
+
+        verify(mockProductService, times(1)).delete(eq("123"));
+    }
+
+    @Test
+    void testDeleteProductFails() throws Exception {
+        doThrow(new RuntimeException("Delete failed")).when(mockProductService).delete(anyString());
+
+        mockMvc.perform(get("/product/delete/123"))
+                .andExpect(status().isInternalServerError()) // Expect HTTP 500
+                .andExpect(content().string("Delete failed")); // Ensure exception message is returned
 
         verify(mockProductService, times(1)).delete(eq("123"));
     }
@@ -129,5 +175,16 @@ class ProductControllerTest {
         mockMvc.perform(get("/product/edit/123"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/product/list"));
+    }
+}
+
+/**
+ * Exception Handler for tests to prevent ServletException issues.
+ */
+@RestControllerAdvice
+class GlobalExceptionHandler {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 }
