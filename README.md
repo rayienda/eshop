@@ -66,3 +66,15 @@ By refactoring the functional test suites to follow these principles, the test c
    The deployment workflow automatically builds a Docker image and deploys it to Koyeb upon pushes to the main branch.
    Additionally, scheduled checks and branch protection mechanisms enhance the reliability and security of the integration and deployment processes. While the implementation meets CI/CD standards, further improvements, such as integration testing and multi-environment deployments, could strengthen the pipeline even more.
 </details>
+
+
+<details>
+<summary>Module 3</summary>
+
+1. To keep things organized, I put CarController and ProductController in separate files, following the Single Responsibility Principle (SRP), each one focuses only on its own job. For flexibility, the Open-Closed Principle (OCP) is applied by using interfaces for CarService and ProductService, so new features can be added without touching the existing code. The Dependency Inversion Principle (DIP) makes testing and updates easier by ensuring controllers rely on interfaces instead of being tied to specific service implementations.
+
+2. This matters to keep the project maintainable, testable, and scalable. With SRP, tweaking car-related features won’t accidentally break product functionality. OCP means we can extend the system without messing with what’s already working, reducing bugs. DIP lets us swap out service implementations effortlessly, making unit testing a breeze with mock data instead of real database calls.
+
+3. Without these principles, the code would get messy. If cars and products were managed in one controller (SRP violation), changing one thing could break another. Ignoring OCP would mean rewriting old code for every new feature, increasing the risk of unexpected issues. And without DIP, testing would be difficult since the controllers would be stuck with specific services.
+
+</details>
