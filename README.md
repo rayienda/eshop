@@ -78,3 +78,38 @@ By refactoring the functional test suites to follow these principles, the test c
 3. Without these principles, the code would get messy. If cars and products were managed in one controller (SRP violation), changing one thing could break another. Ignoring OCP would mean rewriting old code for every new feature, increasing the risk of unexpected issues. And without DIP, testing would be difficult since the controllers would be stuck with specific services.
 
 </details>
+
+
+<details>
+<summary>Module 4</summary>
+
+## Reflection 4
+
+1. **Is the TDD process effective in ensuring reliable code development?**  
+   Yes, in my experience following the TDD workflow helped in structuring the implementation process efficiently. By starting with tests, I was able to focus on expected behavior before writing the actual implementation. It ensured that every change was backed by a clear test case, reducing unexpected regressions. However, one challenge I faced was defining tests before fully understanding all the edge cases, which sometimes required refactoring the test cases themselves. While the current TDD approach provided structure, I realized that some tests could be optimized for better readability and maintainability. Specifically:
+    - Improving test descriptions to better document intent.
+    - Refining assertions to make failure messages clearer.
+    - Introducing parameterized tests for repetitive test scenarios.
+
+   These changes would enhance both the efficiency and clarity of the test suite.
+
+2. **F.I.R.S.T. Principle Reflection**
+
+The F.I.R.S.T. principle is essential in evaluating the effectiveness of unit tests. Below is my reflection on how well the tests adhered to these principles:
+
+| Principle   | Evaluation |
+|------------|------------|
+| **Fast** | The tests executed quickly since they primarily involved in-memory operations and mocks, avoiding heavy dependencies like databases. |
+| **Independent** | Each test was self-contained and did not depend on external state. Mocks were used to ensure isolation between test cases. |
+| **Repeatable** | Tests produced consistent results across multiple runs, ensuring deterministic behavior. |
+| **Self-Validating** | Each test had clear assertions that automatically determined success or failure, eliminating the need for manual inspection. |
+| **Timely** |  Some tests were written after partial implementation instead of strictly following TDD. I need to improve adherence to the **Red-Green-Refactor** cycle by ensuring all failing tests are written before implementation. |
+
+**Next Steps for Improvement**
+- **Enhance edge case coverage**: Expanding test cases for edge scenarios such as invalid inputs and boundary conditions.
+- **Introduce integration tests**: While unit tests ensure individual components work as expected, integration tests will help validate interactions between components.
+- **Optimize test structure**: Implementing better test naming conventions and structuring test classes for maintainability.
+
+By refining these aspects, I can further improve test effectiveness and maintainability in future development cycles.
+
+</details>
