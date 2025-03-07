@@ -15,6 +15,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.Map;
+import java.util.HashMap;
+
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -29,14 +32,13 @@ class PaymentControllerTest {
     private PaymentService paymentService;
 
     @InjectMocks
-    private PaymentControllerTest paymentController;
+    private PaymentController paymentController; // Fixed here
 
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(paymentController).build();
     }
 
-    /*** ✅ Test GET /payment/detail ***/
     @Test
     void testShowPaymentDetailForm() throws Exception {
         mockMvc.perform(get("/payment/detail"))
@@ -44,11 +46,15 @@ class PaymentControllerTest {
                 .andExpect(view().name("paymentdetail"));
     }
 
-    /*** ✅ Test GET /payment/detail/{paymentId} ***/
     @Test
     void testShowPaymentDetail() throws Exception {
-        String paymentId = UUID.randomUUID().toString();
-        Payment payment = new Payment();
+        String paymentId = "5f7b9140-5c43-4199-bd3c-98463306c84b";
+
+        // Provide the required parameters
+        Map<String, String> paymentData = new HashMap<>();
+        paymentData.put("voucherCode", "ESHOP12345678"); // Example voucher code
+
+        Payment payment = new Payment(paymentId, "Voucher Code", paymentData);
         when(paymentService.getPayment(paymentId)).thenReturn(payment);
 
         mockMvc.perform(get("/payment/detail/{paymentId}", paymentId))
@@ -59,7 +65,6 @@ class PaymentControllerTest {
         verify(paymentService, times(1)).getPayment(paymentId);
     }
 
-    /*** ✅ Test GET /payment/admin/list ***/
     @Test
     void testShowAllPayments() throws Exception {
         List<Payment> payments = new ArrayList<>();
@@ -73,11 +78,15 @@ class PaymentControllerTest {
         verify(paymentService, times(1)).getAllPayments();
     }
 
-    /*** ✅ Test GET /payment/admin/detail/{paymentId} ***/
     @Test
     void testShowAdminPaymentDetail() throws Exception {
         String paymentId = UUID.randomUUID().toString();
-        Payment payment = new Payment();
+
+        Map<String, String> paymentData = new HashMap<>();
+        paymentData.put("address", "123 Main Street");
+        paymentData.put("deliveryFee", "5.00"); // Example data for Cash on Delivery
+
+        Payment payment = new Payment(paymentId, "Cash on Delivery", paymentData);
         when(paymentService.getPayment(paymentId)).thenReturn(payment);
 
         mockMvc.perform(get("/payment/admin/detail/{paymentId}", paymentId))
@@ -88,16 +97,21 @@ class PaymentControllerTest {
         verify(paymentService, times(1)).getPayment(paymentId);
     }
 
-    /*** ✅ Test POST /payment/admin/set-status/{paymentId} ***/
+
     @Test
     void testSetPaymentStatus() throws Exception {
         String paymentId = UUID.randomUUID().toString();
-        Payment payment = new Payment();
+        Map<String, String> paymentData = new HashMap<>();
+        paymentData.put("voucherCode", "ESHOP12345678"); // Example voucher code
+
+        Payment payment = new Payment(paymentId, "Voucher Code", paymentData);
         when(paymentService.getPayment(paymentId)).thenReturn(payment);
 
         mockMvc.perform(post("/payment/admin/set-status/{paymentId}", paymentId)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("status", "COMPLETED"))
+                        .param("status", "SUCCESS")
+                        .param("additionalParam1", "value1") // If required
+                        .param("additionalParam2", "value2")) // If required
                 .andExpect(status().isOk())
                 .andExpect(view().name("paymentadmin_detail"))
                 .andExpect(model().attributeExists("message"));
