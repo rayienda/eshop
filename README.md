@@ -79,7 +79,6 @@ By refactoring the functional test suites to follow these principles, the test c
 
 </details>
 
-
 <details>
 <summary>Module 4</summary>
 
