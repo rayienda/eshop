@@ -28,6 +28,7 @@ For the delete feature, when user clicks the delete button, the `ProductControll
 By implementing these improvements, the code will be more maintainable, scalable, and secure.
 
 ## Reflection 2
+
 ### Unit Testing and Code Coverage:
 After writing the unit test, I feel more confident that the implemented features function correctly. Writing unit tests ensures that each component of the code behaves as expected. However, determining the right number of unit tests in a class depends on the complexity of the logic. A good practice is to cover all possible paths, including positive and negative test cases.
 
@@ -53,7 +54,7 @@ In the case of CreateProductFunctionalTest.java, if a new functional test suite 
 <details>
 <summary>Module 2</summary>
 
-## Reflection 2
+## Module 2
 1. **List the code quality issue(s) that you fixed during the exercise and explain your strategy on fixing them.**
 
    Issue: The import "import java.util.UUID;" an "import org.springframework.ui.Model;" was present in ProductControllerTest.java but was not being used.
@@ -82,7 +83,7 @@ In the case of CreateProductFunctionalTest.java, if a new functional test suite 
 <details>
 <summary>Module 4</summary>
 
-## Reflection 4
+## Reflection 1
 
 1. **Is the TDD process effective in ensuring reliable code development?**  
    Yes, in my experience following the TDD workflow helped in structuring the implementation process efficiently. By starting with tests, I was able to focus on expected behavior before writing the actual implementation. It ensured that every change was backed by a clear test case, reducing unexpected regressions. However, one challenge I faced was defining tests before fully understanding all the edge cases, which sometimes required refactoring the test cases themselves. While the current TDD approach provided structure, I realized that some tests could be optimized for better readability and maintainability. Specifically:
@@ -111,4 +112,31 @@ The F.I.R.S.T. principle is essential in evaluating the effectiveness of unit te
 
 By refining these aspects, I can further improve test effectiveness and maintainability in future development cycles.
 
+
+
+## Reflection 2
+Explain what you think about your partner’s code? Are there any aspects that are still lacking from your partner’s code?
+- My partner's code is well-structured. However, one part that may still have a room for improvement is test coverage for edge cases, such as handling invalid inputs (negative quantities, null/empty names, etc.). Additionally, the code could be improved by adding validations in the Product class to prevent invalid data from being set.
+
+What did you do to contribute to your partner’s code?
+- I added a new test testSetProductQuality() to verify that the setQuantity() method correctly updates the product’s quantity.
+
+What code smells did you find on your partner’s code?
+
+- One potential code smell i found is that the lack of edge case test. There are no tests for invalid inputs, such as setting a negative quantity or an empty product name.
+
+What refactoring steps did you suggest and execute to fix those smells?
+Identify the Code Smell: The test suite was missing a test for verifying if the setQuantity() method correctly updates the product’s quantity. Without this test, there was a gap in ensuring that the method behaves as expected.
+
+Add a Unit Test to Improve Coverage: I added the following test to verify that calling setQuantity() properly updates the product’s quantity:
+
+```
+@Test
+void testSetProductQuantity() {
+    product.setQuantity(200);
+    assertEquals(200, product.getQuantity());
+}
+```
+
+This ensures that the setter method functions correctly and prevents potential regressions in the future.
 </details>
