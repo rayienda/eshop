@@ -57,11 +57,15 @@ class PaymentRepositoryTest {
 
         paymentRepository.save(payment1);
         paymentRepository.save(payment2);
+
         List<Payment> payments = paymentRepository.findAll();
 
         assertEquals(2, payments.size());
         assertEquals("1", payments.get(0).getId());
         assertEquals("2", payments.get(1).getId());
+
+        // Ensure a new list is returned
+        assertNotSame(payments, paymentRepository.findAll());
     }
 
     @Test
@@ -98,4 +102,29 @@ class PaymentRepositoryTest {
         assertTrue(retrievedPayment.isPresent());
         assertEquals("REJECTED", retrievedPayment.get().getStatus());
     }
+
+    @Test
+    void testFindAll_DirectExecution() {
+        paymentRepository.findAll();
+    }
+
+    @Test
+    void testFindAll_ReturnsNewListInstance() {
+        Map<String, String> paymentData1 = new HashMap<>();
+        paymentData1.put("voucherCode", "ESHOP1234ABC5678");
+
+        Payment payment1 = new Payment("1", "Voucher Code", paymentData1);
+        paymentRepository.save(payment1);
+
+        // Get the first list
+        List<Payment> firstCall = paymentRepository.findAll();
+        List<Payment> secondCall = paymentRepository.findAll();
+
+        // Check that both lists contain the same elements
+        assertEquals(firstCall, secondCall);
+
+        // Ensure a new list is returned each time
+        assertNotSame(firstCall, secondCall);
+    }
+
 }
