@@ -5,7 +5,7 @@
 
 ## Reflection 1
 In Exercise 1, I implemented edit and delete product features. In the edit feature, when the user clicks the Edit button, a form is displayed with the product's current details using Thymeleaf, and when the user submits the form, the product then will later gets updated.
-For the delete feature, when user clicks the delete button, the `ProductController.java` calls the service to remove the product. 
+For the delete feature, when user clicks the delete button, the `ProductController.java` calls the service to remove the product.
 
 ### Applied Clean Code Principles:
 1. **Single Responsibility Principle (SRP)**: The `ProductController` delegates business logic to `ProductService`, ensuring separation of concerns.
@@ -46,7 +46,7 @@ In the case of CreateProductFunctionalTest.java, if a new functional test suite 
 
 3. Test Readability & Organization: Having similar test logic in multiple places may reduce readability.
 - Solution: Group tests logically and follow naming conventions that describe the test's intent.
-By refactoring the functional test suites to follow these principles, the test code will be cleaner, easier to maintain, and more scalable.
+  By refactoring the functional test suites to follow these principles, the test code will be cleaner, easier to maintain, and more scalable.
 
 </details>
 
@@ -56,12 +56,12 @@ By refactoring the functional test suites to follow these principles, the test c
 ## Reflection 2
 1. **List the code quality issue(s) that you fixed during the exercise and explain your strategy on fixing them.**
 
-    Issue: The import "import java.util.UUID;" an "import org.springframework.ui.Model;" was present in ProductControllerTest.java but was not being used.
-    Strategy: Deleted the unused import to maintain clean, readable, and efficient code.
+   Issue: The import "import java.util.UUID;" an "import org.springframework.ui.Model;" was present in ProductControllerTest.java but was not being used.
+   Strategy: Deleted the unused import to maintain clean, readable, and efficient code.
 
 
 2. **Look at your CI/CD workflows (GitHub)/pipelines (GitLab). Do you think the current implementation has met the definition of Continuous Integration and Continuous Deployment?**
-   
+
    The CI workflows automate the project's build process, execute unit tests, and conduct code quality and security analysis whenever code is pushed or a pull request is created.
    The deployment workflow automatically builds a Docker image and deploys it to Koyeb upon pushes to the main branch.
    Additionally, scheduled checks and branch protection mechanisms enhance the reliability and security of the integration and deployment processes. While the implementation meets CI/CD standards, further improvements, such as integration testing and multi-environment deployments, could strengthen the pipeline even more.
@@ -76,5 +76,39 @@ By refactoring the functional test suites to follow these principles, the test c
 2. This matters to keep the project maintainable, testable, and scalable. With SRP, tweaking car-related features won’t accidentally break product functionality. OCP means we can extend the system without messing with what’s already working, reducing bugs. DIP lets us swap out service implementations effortlessly, making unit testing a breeze with mock data instead of real database calls.
 
 3. Without these principles, the code would get messy. If cars and products were managed in one controller (SRP violation), changing one thing could break another. Ignoring OCP would mean rewriting old code for every new feature, increasing the risk of unexpected issues. And without DIP, testing would be difficult since the controllers would be stuck with specific services.
+
+</details>
+
+<details>
+<summary>Module 4</summary>
+
+## Reflection 4
+
+1. **Is the TDD process effective in ensuring reliable code development?**  
+   Yes, in my experience following the TDD workflow helped in structuring the implementation process efficiently. By starting with tests, I was able to focus on expected behavior before writing the actual implementation. It ensured that every change was backed by a clear test case, reducing unexpected regressions. However, one challenge I faced was defining tests before fully understanding all the edge cases, which sometimes required refactoring the test cases themselves. While the current TDD approach provided structure, I realized that some tests could be optimized for better readability and maintainability. Specifically:
+    - Improving test descriptions to better document intent.
+    - Refining assertions to make failure messages clearer.
+    - Introducing parameterized tests for repetitive test scenarios.
+
+   These changes would enhance both the efficiency and clarity of the test suite.
+
+2. **F.I.R.S.T. Principle Reflection**
+
+The F.I.R.S.T. principle is essential in evaluating the effectiveness of unit tests. Below is my reflection on how well the tests adhered to these principles:
+
+| Principle   | Evaluation |
+|------------|------------|
+| **Fast** | The tests executed quickly since they primarily involved in-memory operations and mocks, avoiding heavy dependencies like databases. |
+| **Independent** | Each test was self-contained and did not depend on external state. Mocks were used to ensure isolation between test cases. |
+| **Repeatable** | Tests produced consistent results across multiple runs, ensuring deterministic behavior. |
+| **Self-Validating** | Each test had clear assertions that automatically determined success or failure, eliminating the need for manual inspection. |
+| **Timely** |  Some tests were written after partial implementation instead of strictly following TDD. I need to improve adherence to the **Red-Green-Refactor** cycle by ensuring all failing tests are written before implementation. |
+
+**Next Steps for Improvement**
+- **Enhance edge case coverage**: Expanding test cases for edge scenarios such as invalid inputs and boundary conditions.
+- **Introduce integration tests**: While unit tests ensure individual components work as expected, integration tests will help validate interactions between components.
+- **Optimize test structure**: Implementing better test naming conventions and structuring test classes for maintainability.
+
+By refining these aspects, I can further improve test effectiveness and maintainability in future development cycles.
 
 </details>
