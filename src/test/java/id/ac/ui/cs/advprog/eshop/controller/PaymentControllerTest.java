@@ -117,6 +117,6 @@ class PaymentControllerTest {
                 .andExpect(model().attributeExists("message"));
 
         verify(paymentService, times(1)).getPayment(paymentId);
-        verify(paymentService, times(1)).setStatus(payment, "COMPLETED");
+        verify(paymentService, times(1)).setStatus(payment, "SUCCESS");
     }
 }

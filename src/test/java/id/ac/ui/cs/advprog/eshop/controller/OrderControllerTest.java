@@ -30,7 +30,7 @@ class OrderControllerTest {
     private PaymentService paymentService;
 
     @InjectMocks
-    private OrderControllerTest orderController;
+    private OrderController orderController;
 
     @BeforeEach
     void setUp() {
@@ -70,7 +70,7 @@ class OrderControllerTest {
     void testShowOrderHistory() throws Exception {
         when(orderService.findAllByAuthor("John Doe")).thenReturn(new ArrayList<>());
 
-        mockMvc.perform(post("/order/history")
+        mockMvc.perform(get("/order/history")
                         .param("author", "John Doe"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("orderhistory"))

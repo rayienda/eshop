@@ -71,7 +71,9 @@ public class OrderController {
     }
 
     @GetMapping("/history")
-    public String showHistoryForm() {
+    public String showOrderHistoryPage(@RequestParam(required = false) String author, Model model) {
+        List<Order> orders = (author != null) ? orderService.findAllByAuthor(author) : new ArrayList<>();
+        model.addAttribute("orders", orders);
         return "orderhistory";
     }
 
@@ -85,6 +87,10 @@ public class OrderController {
     @GetMapping("/pay/{orderId}")
     public String showOrderPaymentPage(@PathVariable String orderId, Model model) {
         Order order = orderService.findById(orderId);
+        if (order == null) { // ✅ Handle missing order
+            model.addAttribute("error", "Order not found.");
+            return "error"; // Return an error page instead of proceeding
+        }
         model.addAttribute("order", order);
         return "orderpay";
     }
